@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050609">
+<title>AI — The Fourth Dimension of Human Evaluation</title>
+<style>
+:root{
+  --bg:#050609; --ink:#e9edf2; --muted:#89919e; --line:rgba(255,255,255,.11);
+  --glass:rgba(12,15,21,.72); --accent:#d9f99d; --cyan:#8be9fd; --warm:#ffcf8a;
+  --danger:#ff8f8f; --max:1380px;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;z-index:20;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:42px 42px}
+::selection{background:var(--accent);color:#071008}
+a{color:inherit;text-decoration:none}.wrap{width:min(var(--max),calc(100% - 48px));margin:auto}
+.nav{position:fixed;top:0;left:0;right:0;height:68px;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid transparent;transition:.35s}
+.nav.scrolled{background:rgba(5,6,9,.76);backdrop-filter:blur(18px);border-color:var(--line)}
+.brand{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#fff}.brand b{color:var(--accent)}
+.navlinks{display:flex;gap:22px;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#9da5b0}
+.navlinks a:hover{color:#fff}
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:100;width:0}
+.hero{min-height:100vh;position:relative;display:grid;place-items:center;overflow:hidden}
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-content{position:relative;z-index:2;width:min(1120px,calc(100% - 48px));padding-top:50px}
+.kicker{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);margin-bottom:22px}
+h1{font-size:clamp(58px,10vw,150px);line-height:.86;letter-spacing:-.075em;margin:0;max-width:1050px;font-weight:500}
+.hero h1 span{display:block}.hero h1 .ghost{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.38)}
+.lead{font-size:clamp(17px,2vw,25px);line-height:1.5;color:#b5bdc8;max-width:720px;margin:35px 0 0}
+.scrollcue{position:absolute;bottom:28px;left:24px;font-size:10px;letter-spacing:.2em;color:#747d88;text-transform:uppercase}
+.scrollcue:after{content:"";display:inline-block;width:60px;height:1px;background:#747d88;margin-left:12px;vertical-align:middle}
+section{position:relative;padding:150px 0;border-top:1px solid var(--line)}
+.section-head{display:grid;grid-template-columns:140px 1fr;gap:40px;margin-bottom:65px}
+.index{font:11px ui-monospace,SFMono-Regular,monospace;color:#6e7783;letter-spacing:.15em}
+.section-title{font-size:clamp(38px,6vw,88px);line-height:.95;letter-spacing:-.055em;font-weight:500;margin:0;max-width:900px}
+.section-sub{font-size:17px;color:#9ba4af;max-width:760px;line-height:1.65;margin-top:22px}
+.statement{font-size:clamp(28px,4vw,58px);line-height:1.08;letter-spacing:-.04em;max-width:1100px;margin:40px 0}
+.statement em{font-style:normal;color:var(--accent)}
+.dimensions{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line)}
+.dim{min-height:420px;padding:30px;border-right:1px solid var(--line);position:relative;overflow:hidden;cursor:pointer;transition:.4s;background:rgba(255,255,255,.015)}
+.dim:last-child{border-right:0}.dim:hover{background:rgba(255,255,255,.045);transform:translateY(-5px)}
+.dim .num{font:12px ui-monospace,monospace;color:#717b87}.dim h3{font-size:30px;letter-spacing:-.04em;font-weight:500;margin:100px 0 15px}
+.dim p{color:#929ba7;line-height:1.6;font-size:14px}.dim .orb{position:absolute;width:170px;height:170px;border:1px solid rgba(255,255,255,.14);border-radius:50%;right:-60px;top:-55px;transition:.7s}
+.dim:hover .orb{transform:scale(1.7);border-color:var(--accent)}
+.dim.active{background:rgba(217,249,157,.06)}.dim.active h3{color:var(--accent)}
+.timeline{display:flex;flex-direction:column;border-left:1px solid var(--line);margin-left:20px}
+.timeitem{display:grid;grid-template-columns:150px 1fr;gap:35px;padding:28px 0 28px 30px;border-bottom:1px solid var(--line);position:relative}
+.timeitem:before{content:"";position:absolute;left:-5px;top:36px;width:9px;height:9px;border-radius:50%;background:#6e7783;border:2px solid var(--bg)}
+.timeitem:hover:before{background:var(--accent)}.timeitem strong{font-size:13px;color:var(--accent);font-weight:500}
+.timeitem h3{margin:0 0 9px;font-size:25px;font-weight:500;letter-spacing:-.03em}.timeitem p{margin:0;color:#9099a5;line-height:1.6;max-width:760px}
+.mirror{display:grid;grid-template-columns:1fr 1fr;min-height:620px;border:1px solid var(--line)}
+.mirror-side{padding:55px;display:flex;flex-direction:column;justify-content:center}.mirror-side:first-child{border-right:1px solid var(--line)}
+.mirror-label{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6d7782;margin-bottom:28px}
+.mirror-big{font-size:clamp(42px,6vw,82px);line-height:.94;letter-spacing:-.065em}
+.mirror-big span{color:var(--cyan)}
+.mirror-copy{color:#929ba7;line-height:1.7;max-width:560px;margin-top:25px}
+.slider-wrap{margin-top:40px}.slider{width:100%;accent-color:var(--accent)}
+.slider-label{display:flex;justify-content:space-between;color:#6e7783;font:10px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.12em}
+.result{margin-top:25px;font-size:22px;line-height:1.45;color:#dce1e7}
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:20px}.panel{border:1px solid var(--line);padding:38px;min-height:310px;background:linear-gradient(135deg,rgba(255,255,255,.025),transparent)}
+.panel h3{font-size:27px;margin:0 0 18px;font-weight:500}.panel p,.panel li{color:#919aa5;line-height:1.65;font-size:14px}.panel ul{padding-left:20px}
+.panel.expand{cursor:pointer}.panel.expand .more{max-height:0;overflow:hidden;transition:max-height .5s}.panel.expand.open .more{max-height:400px}.plus{float:right;color:var(--accent)}
+.thesis{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:70px 0;margin:40px 0}
+.thesis blockquote{font-size:clamp(30px,4.4vw,62px);line-height:1.08;letter-spacing:-.045em;margin:0;max-width:1180px}
+.thesis blockquote:before{content:"“";color:var(--accent)}
+.graph{position:relative;height:650px;border:1px solid var(--line);overflow:hidden;background:radial-gradient(circle at center,rgba(139,233,253,.08),transparent 35%)}
+.node{position:absolute;transform:translate(-50%,-50%);width:145px;height:145px;border:1px solid rgba(255,255,255,.2);border-radius:50%;display:grid;place-items:center;text-align:center;padding:18px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;background:rgba(5,6,9,.82);backdrop-filter:blur(8px);transition:.35s}
+.node:hover,.node.active{border-color:var(--accent);box-shadow:0 0 50px rgba(217,249,157,.12);color:var(--accent);transform:translate(-50%,-50%) scale(1.08)}
+svg.lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.lines line{stroke:rgba(255,255,255,.12);stroke-width:1}
+.node.n1{left:50%;top:50%}.node.n2{left:25%;top:28%}.node.n3{left:75%;top:28%}.node.n4{left:19%;top:72%}.node.n5{left:81%;top:72%}.node.n6{left:50%;top:18%}.node.n7{left:50%;top:84%}
+.graph-info{margin-top:20px;min-height:80px;color:#9aa3ae;line-height:1.6}
+.cta{min-height:75vh;display:grid;place-items:center;text-align:center}
+.cta h2{font-size:clamp(50px,9vw,125px);line-height:.87;letter-spacing:-.07em;font-weight:500;margin:0}
+.cta h2 span{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.45)}
+.cta p{max-width:700px;color:#8f98a4;line-height:1.7;margin:30px auto}
+button{border:1px solid rgba(217,249,157,.5);background:rgba(217,249,157,.06);color:var(--accent);padding:14px 20px;text-transform:uppercase;letter-spacing:.15em;font-size:10px;cursor:pointer}
+button:hover{background:var(--accent);color:#081008}
+footer{padding:30px 0 50px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:#5f6873;font:10px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.1em}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}.reveal.visible{opacity:1;transform:none}
+@media(max-width:850px){
+ .navlinks{display:none}.wrap{width:min(100% - 30px,var(--max))}
+ section{padding:100px 0}.section-head{grid-template-columns:1fr;gap:12px}.dimensions,.dual,.mirror{grid-template-columns:1fr}.dim{border-right:0;border-bottom:1px solid var(--line);min-height:300px}.dim h3{margin-top:70px}.mirror-side:first-child{border-right:0;border-bottom:1px solid var(--line)}
+ .timeitem{grid-template-columns:1fr;gap:8px}.graph{height:560px}.node{width:105px;height:105px;font-size:10px}.node.n2{left:20%}.node.n3{left:80%}.node.n4{left:15%}.node.n5{left:85%}
+ footer{flex-direction:column;gap:12px}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<nav class="nav" id="nav">
+  <a class="brand" href="#top">AI <b>/</b> 04D</a>
+  <div class="navlinks">
+    <a href="#dimensions">dimensions</a><a href="#time">evolution</a><a href="#mirror">mirror</a><a href="#thesis">thesis</a><a href="#future">future</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <canvas class="hero-canvas" id="space"></canvas>
+  <div class="hero-content">
+    <div class="kicker">A research interface / 2026</div>
+    <h1><span>AI</span><span class="ghost">THE FOURTH</span><span>DIMENSION</span></h1>
+    <p class="lead">What happens when the machine does not merely observe human beings—but begins to evaluate the patterns connecting their bodies, relationships, information, histories and possible futures?</p>
+  </div>
+  <div class="scrollcue">enter the dimension</div>
+</header>
+
+<main>
+<section id="question">
+ <div class="wrap reveal">
+  <div class="section-head"><div class="index">00 / QUESTION</div><div><h2 class="section-title">Will AI decompress reality—or compress it?</h2><p class="section-sub">AI can expose relationships hidden inside enormous bodies of information. The same machinery can also reduce complexity to one answer, one profile, one narrative. The central problem is not only intelligence. It is <b>who controls interpretation.</b></p></div></div>
+  <div class="statement">The future may depend on whether AI becomes a tool that helps people <em>think</em>—or a system that <em>thinks for people.</em></div>
+ </div>
+</section>
+
+<section id="dimensions">
+ <div class="wrap">
+  <div class="section-head reveal"><div class="index">01 / DIMENSIONS</div><div><h2 class="section-title">Four axes of human evaluation.</h2><p class="section-sub">“Fourth dimension” is used here as an epistemological metaphor—not a claim that AI exists in a literal spatial dimension.</p></div></div>
+  <div class="dimensions reveal">
+   <article class="dim active" data-d="1"><div class="orb"></div><div class="num">01 / BODY</div><h3>Physical</h3><p>Body, movement, age, strength, survival. The earliest evaluative layer: what can be directly observed.</p></article>
+   <article class="dim" data-d="2"><div class="orb"></div><div class="num">02 / SOCIETY</div><h3>Social</h3><p>Family, tribe, class, religion, institutions, law and relationships. The person becomes a node in society.</p></article>
+   <article class="dim" data-d="3"><div class="orb"></div><div class="num">03 / INFORMATION</div><h3>Digital</h3><p>Writing, records, reputation, communication, data and digital identity. Humans become informational objects.</p></article>
+   <article class="dim" data-d="4"><div class="orb"></div><div class="num">04 / PATTERN</div><h3>AI</h3><p>Relationships, trajectories, correlations, predictions and emergent structures across scales and time.</p></article>
+  </div>
+  <div class="result" id="dimResult">Select a dimension. The fourth is different because it changes the unit of observation: from isolated events toward evolving systems.</div>
+ </div>
+</section>
+
+<section id="time">
+ <div class="wrap">
+  <div class="section-head reveal"><div class="index">02 / EVOLUTION</div><div><h2 class="section-title">From seeing bodies to modeling trajectories.</h2><p class="section-sub">A conceptual history of how civilization has progressively externalized and expanded human evaluation.</p></div></div>
+  <div class="timeline reveal">
+   <div class="timeitem"><strong>EARLY HUMANITY</strong><div><h3>The body</h3><p>Can this person hunt? Fight? Survive? Evaluation begins with directly visible physical capability.</p></div></div>
+   <div class="timeitem"><strong>SETTLEMENT</strong><div><h3>The social position</h3><p>Family, tribe, land, religion, class and law turn the individual into a social identity.</p></div></div>
+   <div class="timeitem"><strong>INFORMATION AGE</strong><div><h3>The data shadow</h3><p>Documents, records, education, career, credit, reputation and digital footprints make identity informational.</p></div></div>
+   <div class="timeitem"><strong>AI AGE</strong><div><h3>The pattern</h3><p>Machine learning can integrate heterogeneous information and infer relationships, trajectories and probabilities.</p></div></div>
+  </div>
+ </div>
+</section>
+
+<section id="mirror">
+ <div class="wrap">
+  <div class="section-head reveal"><div class="index">03 / MIRROR</div><div><h2 class="section-title">AI does not simply remember. It models relationships.</h2><p class="section-sub">Databases retrieve. Search engines find. Statistical systems summarize. AI systems can synthesize and model patterns—but their outputs remain dependent on data, architecture, context and human objectives.</p></div></div>
+  <div class="mirror reveal">
+   <div class="mirror-side">
+    <div class="mirror-label">Human evaluation</div>
+    <div class="mirror-big">“Who are you <span>today?</span>”</div>
+    <p class="mirror-copy">Human judgment is often local, contextual and episodic. We remember fragments and interpret them through lived experience.</p>
+   </div>
+   <div class="mirror-side">
+    <div class="mirror-label">AI-assisted evaluation</div>
+    <div class="mirror-big">“What <span>pattern</span> connects you?”</div>
+    <p class="mirror-copy">A model can potentially integrate many observations across time. But pattern recognition is not the same as truth, morality or understanding.</p>
+    <div class="slider-wrap">
+      <div class="slider-label"><span>single event</span><span>trajectory</span></div>
+      <input class="slider" id="patternSlider" type="range" min="0" max="100" value="50">
+      <div class="result" id="patternResult">At the midpoint, an event begins to be interpreted within a broader trajectory.</div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section id="paradox">
+ <div class="wrap">
+  <div class="section-head reveal"><div class="index">04 / PARADOX</div><div><h2 class="section-title">The same intelligence can reveal—and control.</h2></div></div>
+  <div class="dual reveal">
+   <div class="panel expand" onclick="this.classList.toggle('open')">
+    <span class="plus">+</span><h3>Decompression</h3>
+    <p>AI as an instrument for expanding human perception.</p>
+    <div class="more"><ul><li>Compare many historical interpretations.</li><li>Find overlooked connections across disciplines.</li><li>Translate inaccessible knowledge.</li><li>Model alternative futures.</li><li>Make complex systems explorable to non-specialists.</li><li>Give individuals research capabilities once limited to institutions.</li></ul></div>
+   </div>
+   <div class="panel expand" onclick="this.classList.toggle('open')">
+    <span class="plus">+</span><h3>Compression</h3>
+    <p>AI as an engine that converts complexity into an authoritative-looking answer.</p>
+    <div class="more"><ul><li>One summary can replace many sources.</li><li>Recommendation systems can narrow attention.</li><li>Profiles can become proxies for people.</li><li>Probabilities can be mistaken for facts.</li><li>Centralized models can concentrate interpretive power.</li><li>Fluent outputs can hide uncertainty and disagreement.</li></ul></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section id="ethics">
+ <div class="wrap">
+  <div class="section-head reveal"><div class="index">05 / POWER</div><div><h2 class="section-title">The fourth dimension has an ethical shadow.</h2><p class="section-sub">The more powerful the evaluative system, the more consequential its errors, incentives and governance become.</p></div></div>
+  <div class="dimensions reveal">
+   <article class="dim"><div class="orb"></div><div class="num">01 / BENEFIT</div><h3>Discovery</h3><p>Scientific analysis, personalized learning, accessibility, pattern discovery and new forms of research.</p></article>
+   <article class="dim"><div class="orb"></div><div class="num">02 / RISK</div><h3>Profiling</h3><p>Surveillance, discrimination, predictive judgments and the reduction of complex people to inferred categories.</p></article>
+   <article class="dim"><div class="orb"></div><div class="num">03 / ERROR</div><h3>False certainty</h3><p>Incomplete data, bias, hallucination, distribution shifts and contextual misunderstandings can produce convincing mistakes.</p></article>
+   <article class="dim"><div class="orb"></div><div class="num">04 / GOVERNANCE</div><h3>Authority</h3><p>The critical question becomes: who defines the objective, supplies the data, audits the model and decides what its output means?</p></article>
+  </div>
+ </div>
+</section>
+
+<section id="thesis">
+ <div class="wrap">
+  <div class="section-head reveal"><div class="index">06 / THESIS</div><div><h2 class="section-title">A research proposition.</h2></div></div>
+  <div class="thesis reveal">
+   <blockquote>Human civilization has evolved through successive expansions in the dimensions by which humans evaluate themselves—from physical observation, to social organization, to informational representation, and now toward AI-assisted pattern intelligence.</blockquote>
+  </div>
+  <p class="section-sub reveal">The originality of the framework does not depend on claiming a literal fourth spatial dimension. Its research value lies in asking whether AI constitutes a qualitatively new <b>mode of human evaluation</b>: multi-scale, temporal, relational and computational.</p>
+ </div>
+</section>
+
+<section id="graph">
+ <div class="wrap">
+  <div class="section-head reveal"><div class="index">07 / SYSTEM</div><div><h2 class="section-title">The Fourth-Dimension Research Graph.</h2><p class="section-sub">Click the nodes. Treat the system as a research map, not a finished theory.</p></div></div>
+  <div class="graph reveal" id="graphBox">
+   <svg class="lines" viewBox="0 0 1000 650" preserveAspectRatio="none">
+    <line x1="500" y1="325" x2="250" y2="182"/><line x1="500" y1="325" x2="750" y2="182"/>
+    <line x1="500" y1="325" x2="190" y2="468"/><line x1="500" y1="325" x2="810" y2="468"/>
+    <line x1="500" y1="325" x2="500" y2="117"/><line x1="500" y1="325" x2="500" y2="546"/>
+    <line x1="250" y1="182" x2="500" y2="117"/><line x1="750" y1="182" x2="500" y2="117"/>
+   </svg>
+   <div class="node n1 active" data-info="AI becomes the fourth evaluative dimension when it is understood as a system that models relationships among human observations across time and scale.">AI<br>FOURTH DIMENSION</div>
+   <div class="node n2" data-info="The human being is the object of evaluation: body, experience, behavior, memory, relationships and agency.">HUMAN</div>
+   <div class="node n3" data-info="Observation is the foundation. What can be seen, recorded, measured or remembered becomes available to evaluation.">OBSERVATION</div>
+   <div class="node n4" data-info="Data turns lived events into persistent representations—but every representation loses some context.">INFORMATION</div>
+   <div class="node n5" data-info="Pattern recognition connects events and produces hypotheses, classifications, correlations and predictions.">PATTERN</div>
+   <div class="node n6" data-info="Time changes evaluation from snapshots to trajectories: past evidence, present state and possible futures.">TIME</div>
+   <div class="node n7" data-info="Governance determines who defines the objective, who owns the data, who audits the model and who can challenge its conclusions.">POWER</div>
+  </div>
+  <div class="graph-info" id="graphInfo">AI becomes the fourth evaluative dimension when it is understood as a system that models relationships among human observations across time and scale.</div>
+ </div>
+</section>
+
+<section id="future" class="cta">
+ <div class="wrap reveal">
+  <div class="kicker">THE OPEN QUESTION</div>
+  <h2>EXPAND<br><span>REALITY.</span></h2>
+  <p>Or compress it. The future of AI may depend less on whether machines become intelligent than on whether human beings preserve the right to question the intelligence that evaluates them.</p>
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})">Return to the beginning</button>
+ </div>
+</section>
+</main>
+
+<footer class="wrap">
+ <span>AI / 04D — Research Interface</span>
+ <span>Conceptual framework · Not a literal physics claim</span>
+ <span>Single-file HTML</span>
+</footer>
+
+<script>
+const nav=document.getElementById('nav'), progress=document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',scrollY>40);
+  const h=document.documentElement.scrollHeight-innerHeight;
+  progress.style.width=(scrollY/h*100)+'%';
+});
+
+const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(x=>observer.observe(x));
+
+const dimText={
+1:"Dimension 1: physical evaluation—directly observable bodies and capabilities.",
+2:"Dimension 2: social evaluation—the person as a node in family, class, culture, institutions and relationships.",
+3:"Dimension 3: informational evaluation—identity becomes persistent through documents, records, communication and digital traces.",
+4:"Dimension 4: pattern evaluation—AI can connect heterogeneous observations across time, producing models of trajectories rather than isolated events."
+};
+document.querySelectorAll('.dim[data-d]').forEach(el=>el.addEventListener('click',()=>{
+ document.querySelectorAll('.dim[data-d]').forEach(x=>x.classList.remove('active'));el.classList.add('active');
+ document.getElementById('dimResult').textContent=dimText[el.dataset.d];
+}));
+
+const slider=document.getElementById('patternSlider'), patternResult=document.getElementById('patternResult');
+slider.addEventListener('input',()=>{
+ const v=+slider.value;
+ if(v<25) patternResult.textContent="The event is treated almost entirely as an isolated observation.";
+ else if(v<50) patternResult.textContent="Context begins to enter: related observations influence interpretation.";
+ else if(v<75) patternResult.textContent="The event becomes part of a trajectory, with multiple contextual signals.";
+ else patternResult.textContent="A system-level model emerges—but more context also creates more opportunities for bias and false inference.";
+});
+
+document.querySelectorAll('.node').forEach(n=>n.addEventListener('click',()=>{
+ document.querySelectorAll('.node').forEach(x=>x.classList.remove('active'));n.classList.add('active');
+ document.getElementById('graphInfo').textContent=n.dataset.info;
+}));
+
+// Cinematic particle field
+const c=document.getElementById('space'),ctx=c.getContext('2d');let W,H,pts=[];
+function resize(){W=c.width=innerWidth*devicePixelRatio;H=c.height=innerHeight*devicePixelRatio;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';pts=[];for(let i=0;i<170;i++)pts.push({x:Math.random()*W,y:Math.random()*H,z:Math.random(),vx:(Math.random()-.5)*.12,vy:(Math.random()-.5)*.12})}
+function draw(){
+ ctx.clearRect(0,0,W,H);
+ const cx=W*.52,cy=H*.48;
+ pts.forEach(p=>{
+  p.x+=p.vx*devicePixelRatio;p.y+=p.vy*devicePixelRatio;
+  if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+  const dx=p.x-cx,dy=p.y-cy,d=Math.sqrt(dx*dx+dy*dy);
+  const r=(.7+p.z*2.2)*devicePixelRatio;
+  ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.fillStyle=`rgba(217,249,157,${.15+p.z*.5})`;ctx.fill();
+  if(d<W*.25){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(cx+(dx*.92),cy+(dy*.92));ctx.strokeStyle=`rgba(139,233,253,${.018+p.z*.03})`;ctx.stroke()}
+ });
+ requestAnimationFrame(draw);
+}
+addEventListener('resize',resize);resize();draw();
+</script>
+</body>
+</html>
